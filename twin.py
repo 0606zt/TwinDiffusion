@@ -151,8 +151,8 @@ class TwinDiffusion(nn.Module):
                     latent_1_2 = self.denoise_single_step(latent_1_2, t, text_embeds_1_2, guidance_scale)
                     latent_2_optm = self.denoise_single_step(latent_2_optm, t, text_embeds, guidance_scale)
 
-                # crop fusion
-                if i < num_inference_steps // 2:  # see ablation.1
+                # Crop Fusion
+                if i < num_inference_steps // 2:  # see Ablation.1
                     latent_2_optm_pre = latent_2_optm.clone().detach()
                     latent_1_2 = latent_1_2.reshape(batch_size, 2, *latent_1_2.shape[1:])
 
