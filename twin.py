@@ -175,7 +175,7 @@ class StableDiffusion(nn.Module):
                     # training-free optimization
                     latent_2_optm[:, :, :, :width // 16] = (latent_1_2[:, 0, :, :, width // 16:] +
                                                             lam * latent_2_optm_pre[:, :, :, :width // 16]) / (1 + lam)
-                    # limit test of the function
+                    # limit test
                     # latent_2_optm[:, :, :, :width // 16] = (latent_1_2[:, 0, :, :, width // 16:] +
                     #                                         lam * latent_1_2[:, 1, :, :, :width // 16]) / (1 + lam)
 
@@ -183,7 +183,7 @@ class StableDiffusion(nn.Module):
 
         latents = torch.cat([latent_1_2.reshape(batch_size, 2, *latent_1_2.shape[1:]), latent_2_optm.unsqueeze(1)], dim=1)
         imgs = self.decode_latents(latents.reshape(3 * batch_size, *latents.shape[2:]))
-        imgs = imgs.reshape(batch_size, 3, *imgs.shape[1:])  # return I1、I2、I2*, I1 and I2* are twin images
+        imgs = imgs.reshape(batch_size, 3, *imgs.shape[1:])  # return I1、I2、I2*,  I1 and I2* are twin images
         return imgs
 
 
