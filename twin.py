@@ -18,7 +18,7 @@ def seed_everything(seed):
     # torch.backends.cudnn.benchmark = True
 
 
-class StableDiffusion(nn.Module):
+class TwinDiffusion(nn.Module):
     def __init__(self, device, sd_version='2.0', hf_key=None):
         super().__init__()
 
@@ -151,8 +151,9 @@ class StableDiffusion(nn.Module):
                     latent_1_2 = self.denoise_single_step(latent_1_2, t, text_embeds_1_2, guidance_scale)
                     latent_2_optm = self.denoise_single_step(latent_2_optm, t, text_embeds, guidance_scale)
 
-                if i < num_inference_steps // 2:  # see Ablation.1
-                    latent_2_optm_pre = latent_2_optm.clone().detach()  # z2* that hasn't been optimized yet
+                # crop fusion
+                if i < num_inference_steps // 2:  # see ablation.1
+                    latent_2_optm_pre = latent_2_optm.clone().detach()
                     latent_1_2 = latent_1_2.reshape(batch_size, 2, *latent_1_2.shape[1:])
 
                     # training-based optimization
@@ -201,9 +202,9 @@ if __name__ == '__main__':
         seed_everything(opt.seed)
 
     device = torch.device('cuda:1')
-    sd = StableDiffusion(device, opt.sd_version)
+    td = TwinDiffusion(device, opt.sd_version)
 
-    imgs = sd.generate_twin_images([opt.prompt] * opt.n, [opt.negative] * opt.n, lam=opt.lam)  # [n,3,height,width,3]
+    imgs = td.generate_twin_images([opt.prompt] * opt.n, [opt.negative] * opt.n, lam=opt.lam)  # [n,3,height,width,3]
 
     for i in tqdm(range(opt.n), desc='saving images'):
         img = view_images(imgs[i])
