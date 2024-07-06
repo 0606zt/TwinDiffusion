@@ -109,9 +109,10 @@ class TwinDiffusion(nn.Module):
         imgs = (imgs * 255).astype(np.uint8)
         return imgs
 
-    def generate_twin_images(self, prompts, negative_prompts, lam=1.0, num_inference_steps=50):
+    def generate_twin_images(self, prompts, negative_prompts, lam=1.0, view_stride=32, num_inference_steps=50):
         height = width = 1024 if 'xl' in self.sd_version else 512
         guidance_scale = 5.0 if 'xl' in self.sd_version else 7.5
+        window_size = 128 if 'xl' in self.sd_version else 64
 
         prompts = [prompts] if isinstance(prompts, str) else prompts
         negative_prompts = [negative_prompts] if isinstance(negative_prompts, str) else negative_prompts
@@ -138,7 +139,7 @@ class TwinDiffusion(nn.Module):
 
         latent_1_2 = torch.randn((batch_size, 2, self.unet.config.in_channels, height // 8, width // 8), device=self.device)  # z1 z2
         latent_1_2 = latent_1_2 * self.scheduler.init_noise_sigma
-        latent_1_2[:, 1, :, :, :width // 16] = latent_1_2[:, 0, :, :, width // 16:]  # initialize [z2]l=[z1]r
+        latent_1_2[:, 1, :, :, :window_size - view_stride] = latent_1_2[:, 0, :, :, view_stride:]  # initialize [z2]l=[z1]r
         latent_2_optm = latent_1_2[:, 1].clone()  # initialize z2*=z2
         latent_1_2 = latent_1_2.reshape(2 * batch_size, *latent_1_2.shape[2:])
 
@@ -161,10 +162,10 @@ class TwinDiffusion(nn.Module):
                     # optimizer = torch.optim.Adam([latent_2_optm], lr=1e-3 * (1. - i / 100.))
                     #
                     # for epoch in range(train_epochs):
-                    #     loss = nnf.mse_loss(latent_1_2[:, 0, :, :, width // 16:], latent_2_optm[:, :, :, :width // 16]) + \
+                    #     loss = nnf.mse_loss(latent_1_2[:, 0, :, :, view_stride:], latent_2_optm[:, :, :, :window_size - view_stride]) + \
                     #            lam * nnf.mse_loss(latent_2_optm_pre, latent_2_optm)
                     #     # limit test of the function
-                    #     # loss = nnf.mse_loss(latent_1_2[:, 0, :, :, width // 16:], latent_2_optm[:, :, :, :width // 16]) + \
+                    #     # loss = nnf.mse_loss(latent_1_2[:, 0, :, :, view_stride:], latent_2_optm[:, :, :, :window_size - view_stride]) + \
                     #     #        lam * nnf.mse_loss(latent_1_2[:, 1], latent_2_optm)
                     #
                     #     pbar.set_postfix({'epoch': epoch, 'loss': loss.item() / batch_size})
@@ -174,11 +175,11 @@ class TwinDiffusion(nn.Module):
                     #     optimizer.step()
 
                     # training-free optimization
-                    latent_2_optm[:, :, :, :width // 16] = (latent_1_2[:, 0, :, :, width // 16:] +
-                                                            lam * latent_2_optm_pre[:, :, :, :width // 16]) / (1 + lam)
+                    latent_2_optm[:, :, :, :window_size - view_stride] = (latent_1_2[:, 0, :, :, view_stride:] +
+                                                                          lam * latent_2_optm_pre[:, :, :, :window_size - view_stride]) / (1 + lam)
                     # limit test
-                    # latent_2_optm[:, :, :, :width // 16] = (latent_1_2[:, 0, :, :, width // 16:] +
-                    #                                         lam * latent_1_2[:, 1, :, :, :width // 16]) / (1 + lam)
+                    # latent_2_optm[:, :, :, :window_size - view_stride] = (latent_1_2[:, 0, :, :, view_stride:] +
+                    #                                                       lam * latent_1_2[:, 1, :, :, :window_size - view_stride]) / (1 + lam)
 
                     latent_1_2 = latent_1_2.reshape(2 * batch_size, *latent_1_2.shape[2:])
 
