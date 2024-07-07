@@ -1,0 +1,6 @@
+torch
+torchvision
+diffusers>=0.26.0
+transformers
+tqdm
+gradio
