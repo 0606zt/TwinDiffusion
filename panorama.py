@@ -245,7 +245,7 @@ if __name__ == '__main__':
     parser.add_argument('--lam', type=float, default=1.0)
     parser.add_argument('--view_stride', type=int, default=16)
     parser.add_argument('--cross_time', type=int, default=2)
-    parser.add_argument('--n', type=int, default=3)
+    parser.add_argument('--n', type=int, default=1)
     opt = parser.parse_args()
 
     if opt.seed != -1:

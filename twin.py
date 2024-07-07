@@ -196,7 +196,7 @@ if __name__ == '__main__':
     parser.add_argument('--sd_version', type=str, default='2.0', choices=['1.5', '2.0', '2.1', 'xl-1.0'])
     parser.add_argument('--seed', type=int, default=-1)
     parser.add_argument('--lam', type=float, default=1.0)
-    parser.add_argument('--n', type=int, default=3)
+    parser.add_argument('--n', type=int, default=1)
     opt = parser.parse_args()
 
     if opt.seed != -1:
