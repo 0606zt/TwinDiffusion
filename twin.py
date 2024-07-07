@@ -143,7 +143,7 @@ class TwinDiffusion(nn.Module):
         latent_2_optm = latent_1_2[:, 1].clone()  # initialize z2*=z2
         latent_1_2 = latent_1_2.reshape(2 * batch_size, *latent_1_2.shape[2:])
 
-        with tqdm(self.scheduler.timesteps, desc='generating images') as pbar:
+        with tqdm(self.scheduler.timesteps, desc='Generating images') as pbar:
             for i, t in enumerate(pbar):
                 if 'xl' in self.sd_version:
                     latent_1_2 = self.denoise_single_step(latent_1_2, t, text_embeds_1_2, guidance_scale, added_cond_kwargs_1_2)
@@ -207,7 +207,7 @@ if __name__ == '__main__':
 
     imgs = td.generate_twin_images([opt.prompt] * opt.n, [opt.negative] * opt.n, lam=opt.lam)  # [n,3,height,width,3]
 
-    for i in tqdm(range(opt.n), desc='saving images'):
+    for i in tqdm(range(opt.n), desc='Saving images'):
         img = view_images(imgs[i])
         img.save(f"out{i}.png")
 
