@@ -29,7 +29,7 @@ python panorama.py \
     --prompt "Landscape ink painting" \
     --sd_version '2.0' \
     --H 512 \
-    --w 4096 \
+    --W 4096 \
     --seed -1 \
     --lam 1 \
     --view_stride 16 \
