@@ -1,8 +1,8 @@
-# 🦉TwinDiffusion: Enhancing Coherence and Efficiency in Panoramic Image Generation with Diffusion Models (ECAI 2024)
-
-## Brief Look
+# 🦉TwinDiffusion: Enhancing Coherence and Efficiency in Panoramic Image Generation with Diffusion Models
 
 ![intro](docs/intro.png)
+
+## Brief Look
 
 **TwinDiffusion** is a multiDiffusion-based framework that integrates two straightforward but effective methods to generate panoramic images with
 improved quality and efficiency.
