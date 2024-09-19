@@ -1,4 +1,4 @@
-# 🦉TwinDiffusion: Enhancing Coherence and Efficiency in Panoramic Image Generation with Diffusion Models
+# ♊TwinDiffusion: Enhancing Coherence and Efficiency in Panoramic Image Generation with Diffusion Models
 
 ![intro](docs/intro.png)
 
