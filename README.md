@@ -48,10 +48,12 @@ python app_gradio.py
 If you find our work helpful, please consider citing:
 
 ```bibtex
-@article{zhou2024twindiffusion,
+@incollection{zhou2024twindiffusion,
   title={TwinDiffusion: Enhancing Coherence and Efficiency in Panoramic Image Generation with Diffusion Models},
   author={Zhou, Teng and Tang, Yongchuan},
-  journal={arXiv preprint arXiv:2404.19475},
-  year={2024}
+  booktitle={ECAI 2024},
+  pages={386--393},
+  year={2024},
+  publisher={IOS Press}
 }
 ```
