@@ -27,7 +27,7 @@ python twin.py --prompt "A photo of dolomites" --seed 5 --n 3
 ```bash
 python panorama.py \
     --prompt "Landscape ink painting" \
-    --sd_version '2.0' \
+    --sd_version 2.0 \
     --H 512 \
     --W 4096 \
     --seed -1 \
