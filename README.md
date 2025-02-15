@@ -4,7 +4,7 @@
 
 ## Brief Look
 
-**TwinDiffusion** is a multiDiffusion-based framework that integrates two straightforward but effective methods to generate panoramic images with
+**TwinDiffusion** is a MultiDiffusion-based framework that integrates two straightforward but effective methods to generate panoramic images with
 improved quality and efficiency.
 
 > **Abstract** &ensp; Diffusion models have emerged as effective tools for generating diverse and high-quality content. However, their capability in high-resolution image generation, particularly for panoramic images, still faces challenges such as visible seams and incoherent transitions. In this paper, we propose TwinDiffusion, an optimized framework designed to address these challenges through two key innovations: the Crop Fusion for quality enhancement and the Cross Sampling for efficiency optimization. We introduce a training-free optimizing stage to refine the similarity of adjacent image areas, as well as an interleaving sampling strategy to yield dynamic patches during the cropping process. A comprehensive evaluation is conducted to compare TwinDiffusion with the prior works, considering factors including coherence, fidelity, compatibility, and efficiency. The results demonstrate the superior performance of our approach in generating seamless and coherent panoramas, setting a new standard in quality and efficiency for panoramic image generation. 
