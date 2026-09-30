@@ -55,6 +55,7 @@ class TwinDiffusion(nn.Module):
 
         print('Loading stable diffusion...')
 
+        model_key = os.path.join("/data4/zt/models", model_key)
         self.vae = AutoencoderKL.from_pretrained(model_key, subfolder="vae").to(self.device)
         self.tokenizer = CLIPTokenizer.from_pretrained(model_key, subfolder="tokenizer")
         self.text_encoder = CLIPTextModel.from_pretrained(model_key, subfolder="text_encoder").to(self.device)
@@ -248,16 +249,23 @@ if __name__ == '__main__':
     parser.add_argument('--n', type=int, default=1)
     opt = parser.parse_args()
 
+    opt.seed = 28
     if opt.seed != -1:
         seed_everything(opt.seed)
 
-    device = torch.device('cuda')
+    device = torch.device('cuda:4')
     td = TwinDiffusion(device, opt.sd_version)
 
-    start = time.time()
-    imgs = td.text2panorama_optm([opt.prompt] * opt.n, [opt.negative] * opt.n, opt.H, opt.W, lam=opt.lam, view_stride=opt.view_stride)
-    print(f"time: {time.time() - start} s")
+    # start = time.time()
+    # imgs = td.text2panorama_optm([opt.prompt] * opt.n, [opt.negative] * opt.n, opt.H, opt.W, lam=opt.lam, view_stride=opt.view_stride)
+    # print(f"time: {time.time() - start} s")
+    #
+    # for i in tqdm(range(opt.n), desc='Saving images'):
+    #     TT.ToPILImage()(imgs[i]).save(f"out{i}.png")
 
-    for i in tqdm(range(opt.n), desc='Saving images'):
-        TT.ToPILImage()(imgs[i]).save(f"out{i}.png")
+    opt.prompt = "A photo capturing a serene landscape featuring a range of mountains reflected in the still waters of a clear lake, surrounded by lush greenery. People engaged in activities like kayaking and fishing, and colorful boats gently bobbing on the water. The sky is a soft blue, dotted with a few wispy clouds, adding to the peaceful ambiance of this natural setting."
+    opt.W = 5120
+    for ii in range(50):
+        imgs = td.text2panorama_optm([opt.prompt], [opt.negative], opt.H, opt.W, lam=opt.lam, view_stride=opt.view_stride)
+        TT.ToPILImage()(imgs[0]).save(f"/data4/zt/LlamaGen/res/td/pano/mountainLakePeopleBoats{ii},vstride={opt.view_stride},seed={opt.seed},td.png")
 
